@@ -1,0 +1,1209 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "iMwHt9KbWdwp"
+      },
+      "source": [
+        "## Домашнее задание 1 (10 баллов)\n",
+        "\n",
+        "Все задания ниже имеют равный вес (10/16)."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "4pumds0MWdwq"
+      },
+      "source": [
+        "### О задании\n",
+        "\n",
+        "В этом домашнем задании вы попрактикуетесь в работе с библиотекой numpy, которая позволяет сравнительно легко и удобно выполнять разнообразные вычисления, избегая самостоятельной реализации поэлементной обработки."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Hw4Cc0txWdwr"
+      },
+      "source": [
+        "- Вы впервые делаете ДЗ в таком формате, где нет автопроверок, как в Яндекс.Контесте. Здесь важно понимать, что не нужно стирать код, который уже прописан — его лишь нужно дополнить решениями по условиям задач.\n",
+        "\n",
+        "- Во всех задачах необходимо написать код решения внутри функции и убедиться, что она работает, с помощью [assert](https://python-reference.readthedocs.io/en/latest/docs/statements/assert.html) на выражение с использованием этой функции для данных из условия. Начиная с 11 задачи никаких assert'ов нет.\n",
+        "\n",
+        "- При решении задач запрещается использовать циклы (`for`, `while`) и оператор `if`. Да, `map`, `reduce`, `filter` и любые другие \"чисто питоновские\" конструкции тоже запрещены. **Используйте только функционал numpy**.\n",
+        "\n",
+        "- Везде, где встречаются массивы или матрицы, подразумевается, что это `numpy.array`.\n",
+        "\n",
+        "- **numpy reference:** https://numpy.org/doc/stable/reference/index.html"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ULC8GFwYWdwr"
+      },
+      "source": [
+        "__Внимание!__ Домашнее задание выполняется самостоятельно. Не допускается помощь в решении домашнего задания от однокурсников или третьих лиц. «Похожие» решения считаются плагиатом, и все задействованные студенты — в том числе и те, у кого списали, — не могут получить за него больше 0 баллов.\n",
+        "\n",
+        "Использование в решении домашнего задания генеративных моделей (ChatGPT и так далее) допускается исключительно в рамках справочной и образовательной информации. Любые другие случаи применения средств ИИ — например, для автоматической генерации кода по заданию — считаются плагиатом, и такое домашнее задание оценивается в 0 баллов.\n",
+        "\n",
+        "В случае если в решении используются подходы, функции или формулы, не разбиравшиеся на лекциях и семинарах, — необходимо обязательное указание источника: ссылка на документацию, статью, другой ресурс. При отсутствии оформления источников задание может быть полностью обнулено."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "pycharm": {
+          "name": "#%%\n"
+        },
+        "id": "kqb7UVuXWdwr"
+      },
+      "source": [
+        "import numpy as np"
+      ],
+      "outputs": [],
+      "execution_count": 3
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "BnyoEg8xWdws"
+      },
+      "source": [
+        "### Задание 1\n",
+        "\n",
+        "Напишите функцию, возвращающую округленную взвешенную сумму оценок по данным оценкам и весам. Можете посчитать свою оценку за курс :) В нашем случае вес экзамена равен 0.3, вес домашек - 0.4, вес контрольной - 0.2, вес самостоятельных - 0.1. Например, если за экзамен у вас 7, за домашки 10, за контрольную 8, а за самостоятельные 6, то вы получите отличную оценку 8!\n",
+        "\n",
+        "Обратите внимание, что на вход приходит всегда двумерный массив. В нем в каждой строке - окенки одного конкретного студента. От вас требуется вернуть итоговую оценку для всех студентов в массиве."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылка на используемый метод:`\n",
+        "\n",
+        "**round**: https://numpy.org/doc/2.1/reference/generated/numpy.round.html"
+      ],
+      "metadata": {
+        "id": "IjUKx8vnQ9Dm"
+      }
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "zQoOJo75Wdws"
+      },
+      "source": [
+        "def result_mark(weights: np.array, marks: np.array) -> int:\n",
+        "  proizv = np.dot(marks, weights) # перемножаем веса на оценки\n",
+        "  round_result = np.round(proizv) # округляем полученное до ближайшей целой оценки\n",
+        "  return round_result"
+      ],
+      "outputs": [],
+      "execution_count": 4
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "vFOkRkYaWdws"
+      },
+      "source": [
+        "weights = np.array([0.3, 0.4, 0.2, 0.1])\n",
+        "marks = np.array([[7, 10, 8, 6], [6, 9, 7, 6]])\n",
+        "\n",
+        "assert np.allclose(result_mark(weights, marks), np.array([8, 7]))"
+      ],
+      "outputs": [],
+      "execution_count": 5
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 6,
+      "metadata": {
+        "id": "x_x6WhKAWdws"
+      },
+      "outputs": [],
+      "source": [
+        "weights = np.array([0.3, 0.4, 0.2, 0.1])\n",
+        "marks = np.array([[7, 0, 8, 6]])\n",
+        "\n",
+        "assert np.allclose(result_mark(weights, marks), np.array([4]))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "pvG3OLLgWdws"
+      },
+      "source": [
+        "### Задание 2\n",
+        "\n",
+        "Напишите функцию, которая каждое четное число в массиве заменяет на его квадрат (вторую степень), а нечетное - на его синус. Округлите все значения в итоговом массиве до двух знаков после запятой."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылки на используемые методы:`\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "**where:** https://numpy.org/devdocs/reference/generated/numpy.where.html\n",
+        "\n",
+        "**round**: https://numpy.org/doc/2.1/reference/generated/numpy.round.html"
+      ],
+      "metadata": {
+        "id": "NuQ8BiRVQW1j"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 7,
+      "metadata": {
+        "id": "THxQLGXFWdws"
+      },
+      "outputs": [],
+      "source": [
+        "def change_array(array: np.array) -> np.array:\n",
+        "  zamena = np.where(array % 2 == 0, array ** 2, np.sin(array)) # заменяем четные числа на их квадраты, а нечетные на их синусы\n",
+        "  return np.round(zamena, 2) # выводим, округляя до 2 знаков после запятой"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 8,
+      "metadata": {
+        "id": "2eLwRE-0Wdwt"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([2, 5, 1, 0, -6, 22, 213431])\n",
+        "\n",
+        "assert np.allclose(change_array(array), np.array([4.0, -0.96, 0.84, 0.0, 36.0, 484.0, -0.58]))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 9,
+      "metadata": {
+        "id": "IvtpLJMuWdwt"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([3, 12, 15, -97, 6])\n",
+        "\n",
+        "assert np.allclose(change_array(array), np.array([0.14, 144.0, 0.65, -0.38, 36.0]))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "H6uqp60bWdwt"
+      },
+      "source": [
+        "### Задание 3\n",
+        "\n",
+        "Напишите функцию, которая вычисляет разность каждого элемента с предыдущим (для самого первого считайте, что его разница с \"предыдущим\" нулевая) в виде нового массива и возвращает вектор, в котором каждый новый элемент - сумма всех предыдущих из полученного нового массива."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылка на используемый метод:`\n",
+        "\n",
+        "\n",
+        "**cumsum:** https://numpy.org/doc/2.1/reference/generated/numpy.cumsum.html#numpy-cumsum"
+      ],
+      "metadata": {
+        "id": "9tGNuzbTwgcD"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 10,
+      "metadata": {
+        "id": "9gSmS7etWdwt"
+      },
+      "outputs": [],
+      "source": [
+        "def cumulative_sum_of_differences(array):\n",
+        "    rasnost = array[1:] - array[:-1] # из массива без 1 элемента вычитаем массив без последнего\n",
+        "    cum_summa = np.cumsum(rasnost) # считаем кумулятивную (накопленную) сумму\n",
+        "    result = np.hstack([[0], cum_summa]) # добавляем 0 в начало массива, тк для первого элемента разница нулевая\n",
+        "    return result"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 11,
+      "metadata": {
+        "id": "y7SwdTcaWdwu"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([3, 6, 2, 8])\n",
+        "\n",
+        "assert np.allclose(cumulative_sum_of_differences(array), np.array([0, 3, -1, 5]))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 12,
+      "metadata": {
+        "id": "AhUan89MWdwu"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([5, 1])\n",
+        "\n",
+        "assert np.allclose(cumulative_sum_of_differences(array), np.array([0, -4]))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "O3u9qkZEWdwu"
+      },
+      "source": [
+        "### Задание 4\n",
+        "\n",
+        "Напишите функцию, которая транспонирует двумерный массив, затем делает из него одномерный (reshape), переводит все элементы массива в *int8* и выводит его отсортированным по убыванию."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылки на используемые методы:`\n",
+        "\n",
+        "**int8:** https://numpy.org/doc/2.1/reference/arrays.scalars.html#numpy.int8\n",
+        "\n",
+        "**sort:** https://numpy.org/doc/2.1/reference/generated/numpy.sort.html#numpy.sort"
+      ],
+      "metadata": {
+        "id": "X3HbsybnHXYK"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 13,
+      "metadata": {
+        "id": "0UxWd7VbWdwu"
+      },
+      "outputs": [],
+      "source": [
+        "def flatten_and_sort_transposed(array: np.array) -> np.array:\n",
+        "    array_transposed = np.transpose(array) # транспонируем матрицу\n",
+        "    array_reshaped = array_transposed.reshape(-1) # приводим к виду одномерного массива\n",
+        "    array_int8 = array_reshaped.astype(np.int8) # преобразуем в тип int8\n",
+        "    array_sorted = np.sort(array_int8)[::-1] # сортируем по возврастанию и разворачиваем (сортировка по убыванию)\n",
+        "    return array_sorted"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 14,
+      "metadata": {
+        "id": "TAg_h7uoWdwu"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[256, -10], [-381, 112]])\n",
+        "\n",
+        "assert np.allclose(flatten_and_sort_transposed(array), np.array([112, 0, -10, -125]))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 15,
+      "metadata": {
+        "id": "jlTdBZWaWdwu"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[9, 8, 7], [3, 6, 129]])\n",
+        "\n",
+        "assert np.allclose(flatten_and_sort_transposed(array), np.array([ 9, 8, 7, 6, 3, -127]))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "qe_wNNb2Wdwu"
+      },
+      "source": [
+        "### Задание 5\n",
+        "\n",
+        "Напишите функцию, которая удаляет из массива все строки, среднее значение в которых больше общего среднего значения по всему массиву."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылка на используемый метод:`\n",
+        "\n",
+        "**mean:** https://numpy.org/doc/2.1/reference/generated/numpy.mean.html#numpy.mean"
+      ],
+      "metadata": {
+        "id": "CHAS3K-JFzfN"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 16,
+      "metadata": {
+        "id": "OXMVjz5_Wdwu"
+      },
+      "outputs": [],
+      "source": [
+        "def filter_rows_by_mean(array):\n",
+        "    srednee = np.mean(array) # общее среднее по всем элементам массива\n",
+        "    srednee_stroka = np.mean(array, axis=1) # среднее по каждой из строк\n",
+        "    return array[srednee_stroka <= srednee] # оставляем только строки где среднее по ним <= общего среднего"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 17,
+      "metadata": {
+        "id": "P45eqJoHWdwu"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[1, 2, 3], [7, 8, 9], [4, 5, 6]])\n",
+        "res = filter_rows_by_mean(array)\n",
+        "\n",
+        "assert res.ndim == 2\n",
+        "assert np.allclose(res, np.array([[1, 2, 3], [4, 5, 6]]))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 18,
+      "metadata": {
+        "id": "-tywx9p3Wdwu"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[10, 20], [5, 5], [15, 15]])\n",
+        "res = filter_rows_by_mean(array)\n",
+        "\n",
+        "assert res.ndim == 2\n",
+        "assert np.allclose(res, np.array([[5, 5]]))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "tkIGTHe_Wdwu"
+      },
+      "source": [
+        "### Задание 6\n",
+        "\n",
+        "Напишите функцию, которая принимает на вход число - размер массива (квадратная матрица), который заполнен по принипу шахматной доски нулями и единицами. Первой (слева сверху) идет всегда единица. Напомним, что на шахматной доске белые и черные ячейки чередуются (в данном задании чередуются нули и единицы)."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылка на используемый метод:`\n",
+        "\n",
+        "**indices:** https://numpy.org/doc/2.1/reference/generated/numpy.indices.html#numpy-indices"
+      ],
+      "metadata": {
+        "id": "TN02pPrk0Dmj"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 19,
+      "metadata": {
+        "id": "W17vdsLRWdwu"
+      },
+      "outputs": [],
+      "source": [
+        "def create_checkerboard(number):\n",
+        "    n_stroka, m_stolbec = np.indices((number, number)) # создаем матрицы индексов размера number на number\n",
+        "    result_matrix = 1 - (n_stroka + m_stolbec) % 2 # проверка на четность: нечетные, где 1, четные, где 0 (вычитаем из 1, тк начинаем с 1, а не с 0)\n",
+        "    return result_matrix"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 20,
+      "metadata": {
+        "id": "kj8VCaqPWdwv"
+      },
+      "outputs": [],
+      "source": [
+        "number = 3\n",
+        "\n",
+        "assert np.allclose(create_checkerboard(number) - np.array([[1, 0, 1], [0, 1, 0], [1, 0, 1]]), np.zeros((number, number)))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 21,
+      "metadata": {
+        "id": "OcvFNzG4Wdwv"
+      },
+      "outputs": [],
+      "source": [
+        "number = 4\n",
+        "\n",
+        "assert np.allclose(create_checkerboard(number) - np.array([[1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1]]), np.zeros((number, number)))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "56LlZ4H1Wdwv"
+      },
+      "source": [
+        "### Задание 7\n",
+        "\n",
+        "Напишите функцию, которая сортирует строки двумерного массива по значению в первом (начиная с нуля) столбце (по возрастанию)."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Cсылка на используемый метод:`\n",
+        "\n",
+        "**argsort:** https://numpy.org/doc/2.1/reference/generated/numpy.argsort.html#numpy-argsort"
+      ],
+      "metadata": {
+        "id": "NNwsCxeL0aTC"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 22,
+      "metadata": {
+        "id": "6D3SFKoDWdwv"
+      },
+      "outputs": [],
+      "source": [
+        "def sort_rows_by_second_column(array):\n",
+        "    array_1_index = array[:, 1] # выводим только 1-й столбец\n",
+        "    array_sort = np.argsort(array_1_index) # сортируем по индексам\n",
+        "    sorted_array = array[array_sort] # выводим строки в отсортированном порядке\n",
+        "    return sorted_array"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 23,
+      "metadata": {
+        "id": "jebWZP0sWdwv"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[10, 2], [3, 5], [7, 1]])\n",
+        "\n",
+        "assert np.allclose(sort_rows_by_second_column(array), np.array([[7, 1], [10, 2], [3, 5]]))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 24,
+      "metadata": {
+        "id": "E-RbS_0oWdwv"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[5, 8, 1], [10, 3, 9], [2, 7, 0], [6, -1, 5]])\n",
+        "\n",
+        "assert np.allclose(sort_rows_by_second_column(array), np.array([[6, -1, 5], [10, 3, 9], [2, 7, 0], [5, 8, 1]]))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "_Ea7ea_1Wdwv"
+      },
+      "source": [
+        "### Задание 8\n",
+        "\n",
+        "Напишите функцию, которая вычисляет сумму элементов [побочной](https://ru.wikipedia.org/wiki/Квадратная_матрица) диагонали квадратной матрицы."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылка на используемый метод:`\n",
+        "\n",
+        "**diag:** https://numpy.org/doc/2.1/reference/generated/numpy.diag.html#numpy.diag"
+      ],
+      "metadata": {
+        "id": "9h9rsmEO0tZM"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 25,
+      "metadata": {
+        "id": "c52pnmW6Wdwv"
+      },
+      "outputs": [],
+      "source": [
+        "def sum_counterdiagonal_elements(array):\n",
+        "    array_new = array[:, ::-1] # отзеркалим массив \"по горизонтали\", чтобы побочная диагональ стала основной (можно было и по вертикали)\n",
+        "    diag = np.diag(array_new) # извлечем цифры с основной диагонали\n",
+        "    sum = np.sum(diag) # просуммируем их\n",
+        "    return sum"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 26,
+      "metadata": {
+        "id": "Pa_UuPEBWdwv"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[5, 8, 1], [10, 3, 9], [2, 7, 0]])\n",
+        "\n",
+        "assert sum_counterdiagonal_elements(array) == 6"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 27,
+      "metadata": {
+        "id": "widlOo0SWdwv"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[-4, -1, -1, 7], [6, -10, 5, -9], [3, -8, 6, 8], [-1, -6, 7, -10]])\n",
+        "\n",
+        "assert sum_counterdiagonal_elements(array) == 3"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "WyANDBr9Wdwv"
+      },
+      "source": [
+        "### Задание 9\n",
+        "\n",
+        "Напишите функцию, которая принимает на вход три числа (начало отрезка, конец отрезка, количество точек на отрезке). Данная функция генерирует указанное количество точек равномерно на отрезке с указанными концами (точки равноудалены друг от друга). Затем функция генерирует другой массив - натуральный логарифм от всех точек отрезка плюс единица ($ln(point + 1)$). Возвращает функция массив пар точек вида (точка на отрезке, ее логарифм). Каждое значение в возвращаемом массиве должно быть округлено до двух знаков после запятой."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылка на использованные методы:`\n",
+        "\n",
+        "**linspace:** https://numpy.org/doc/2.1/reference/generated/numpy.linspace.html#numpy-linspace\n",
+        "\n",
+        "**column_stack:** https://numpy.org/doc/2.1/reference/generated/numpy.column_stack.html#numpy-column-stack"
+      ],
+      "metadata": {
+        "id": "he71Cx133wvl"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 28,
+      "metadata": {
+        "id": "4B4d4DLFWdwv"
+      },
+      "outputs": [],
+      "source": [
+        "def generate_logarithm_points(start, end, count):\n",
+        "    array1 = np.linspace(start, end, count) # создаем массив равноудаленных точек от start до end (включительно)\n",
+        "    array_ln = np.log(array1 +1) # создаем массив, вычисляя натуральный логарифм от (всех точек отрезка + 1)\n",
+        "    result = np.column_stack((array1, array_ln)) # объединяем оба массива как столбцы в двумерный массив\n",
+        "    rounded_result = np.round(result, 2) # округляем до 2 знаков после запятой\n",
+        "    return rounded_result"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 29,
+      "metadata": {
+        "id": "YJRRk0t3Wdwv"
+      },
+      "outputs": [],
+      "source": [
+        "start = 1\n",
+        "end = 10\n",
+        "count = 5\n",
+        "\n",
+        "assert np.allclose(generate_logarithm_points(start, end, count), np.array([[1., 0.69], [3.25, 1.45], [5.5 , 1.87], [7.75, 2.17], [10., 2.4]]))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 30,
+      "metadata": {
+        "id": "NdTP6frJWdww"
+      },
+      "outputs": [],
+      "source": [
+        "start = 5\n",
+        "end = 12\n",
+        "count = 4\n",
+        "\n",
+        "assert np.allclose(generate_logarithm_points(start, end, count), np.array([[5., 1.79], [7.33, 2.12], [9.67, 2.37], [12., 2.56]]))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "1UwdtTVAWdww"
+      },
+      "source": [
+        "### Задание 10\n",
+        "\n",
+        "Напишите функцию, которая нормализует входной двумерный массив.\n",
+        "\n",
+        "Под нормализацией в данном задании подразумевается перевод всех чисел массива на отрезок $[0; 1]$. Очевидно, недостаточно просто вычесть/прибавить лишнее, чтобы остались числа на нужном отрезке. Суть нормализации массива в том, чтобы не потерять информацию о его элементах и их соотношениях. Потому, необходимо сохранить пропорции расстояний между каждым числом - спроецировать все точки на указанный отрезок. Такой метод масштабирования массива называется MinMaxScaling. Само название дает подсказку, как нужно решить задачу. Дробные числа округляйте до двух знаков после запятой.\n",
+        "\n",
+        "*Будьте осторожны с делением...*"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылки на используемые методы:`\n",
+        "\n",
+        "**where:** https://numpy.org/devdocs/reference/generated/numpy.where.html\n",
+        "\n",
+        "**round**: https://numpy.org/doc/2.1/reference/generated/numpy.round.html"
+      ],
+      "metadata": {
+        "id": "Z7YxTm45FbD9"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 31,
+      "metadata": {
+        "id": "Baqepte9Wdww"
+      },
+      "outputs": [],
+      "source": [
+        "def min_max_scale(array):\n",
+        "    a = np.max(array) # максимум из массива\n",
+        "    b = np.min(array) # минимум из массива\n",
+        "    raznost = a - b # разность максимума и минимума (размах)\n",
+        "    raznost_new = np.where(raznost == 0, 1, raznost) # разность в случае a = b, чтобы не было деления на 0\n",
+        "    result = (array - b)/raznost_new # считаем по формуле мин_макс нормализации\n",
+        "    rounded_result = np.round(result, 2) # округляем до 2 знаков после запятой\n",
+        "    return rounded_result"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 32,
+      "metadata": {
+        "id": "z7KwLbUiWdww"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n",
+        "\n",
+        "assert np.allclose(min_max_scale(array), np.array([[0. , 0.12, 0.25], [0.38, 0.5 , 0.62], [0.75, 0.88, 1.]]))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 33,
+      "metadata": {
+        "id": "C9k5fgHUWdww"
+      },
+      "outputs": [],
+      "source": [
+        "array = np.array([[0, 1, 2], [3, 4, 5]])\n",
+        "\n",
+        "assert np.allclose(min_max_scale(array), np.array([[0., 0.2, 0.4], [0.6, 0.8, 1.]]))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "AJ9H6VTDWdww"
+      },
+      "source": [
+        "### Задание 11\n",
+        "\n",
+        "Дано два массива: массив целых или нецелых чисел `celsius_temps`, представляющий собой температуру, измеренную в градусах Цельсия, в некотором регионе; и массив строковых данных `days`, представляющий собой набор тайтлов для дней, когда соответственно данная температура была зафиксирована.\n",
+        "\n",
+        "Вам требуется написать функцию, возвращающую тайтлы тех дней, когда температура в Фаренгейтах была выше 90, а в Цельсиях — не ниже 30.\n",
+        "\n",
+        "Формула для перевода температуры в Фаренгейты:\n",
+        "$$ F =  C * 9 / 5 + 32 $$\n",
+        "где:\n",
+        "\n",
+        "* $F$ — температура в градусах Фаренгейта,\n",
+        "* $C$ — температура в градусах Цельсия."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылка на используемый метод:`\n",
+        "\n",
+        "**where:** https://numpy.org/devdocs/reference/generated/numpy.where.html"
+      ],
+      "metadata": {
+        "id": "sBOcZMOaCI23"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 34,
+      "metadata": {
+        "id": "bcl3bmm8Wdww"
+      },
+      "outputs": [],
+      "source": [
+        "def hot_days(celsius_temps, days):\n",
+        "  f_temps = celsius_temps * 9/5 + 32 # перевод в фаренгейты по формуле из условия\n",
+        "  indices_hotdays = np.where((celsius_temps >= 30) & (f_temps > 90)) # оставим индексы только температур, подходящих под оба условия\n",
+        "  hot_days = days[indices_hotdays] # выведем дни с теми же (\"подходящими\") индексами\n",
+        "  return hot_days"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 35,
+      "metadata": {
+        "id": "VTvs_Pr4Wdww",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "3d8a58e0-7f41-4c6d-aa88-2a112be2f95f"
+      },
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array(['четверг'], dtype='<U11')"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 35
+        }
+      ],
+      "source": [
+        "celsius_temps = np.array([25, 32, 28, 35, 30])\n",
+        "days = np.array(['понедельник', 'вторник', 'среда', 'четверг', 'пятница'])\n",
+        "hot_days(celsius_temps, days)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "IbdEfAKaWdww"
+      },
+      "source": [
+        "### Задание 12\n",
+        "\n",
+        "На вход подается [трехмерный тензор](https://ru.wikipedia.org/wiki/%D0%A2%D0%B5%D0%BD%D0%B7%D0%BE%D1%80). Напишите функцию, которая для каждого слоя тензора выведет его верхний левый блок размера $2\\times2$.\n",
+        "\n",
+        "Например, для тензора:\n",
+        "\n",
+        "\n",
+        "```\n",
+        "                  [[[1, 2, 3],\n",
+        "                    [4, 5, 6],\n",
+        "                    [7, 8, 9]],\n",
+        "\n",
+        "                   [[10, 11, 12],\n",
+        "                    [13, 14, 15],\n",
+        "                    [16, 17, 18]],\n",
+        "\n",
+        "                   [[19, 20, 21],\n",
+        "                    [22, 23, 24],\n",
+        "                    [25, 26, 27]]]\n",
+        "```\n",
+        "\n",
+        "функция должна вывести:\n",
+        "\n",
+        "```\n",
+        "                  [[[1, 2],\n",
+        "                    [4, 5]],\n",
+        "\n",
+        "                   [[10, 11],\n",
+        "                    [13, 14]],\n",
+        "\n",
+        "                   [[19, 20],\n",
+        "                    [22, 23]]]\n",
+        "```"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 36,
+      "metadata": {
+        "id": "bmNLbnskWdww"
+      },
+      "outputs": [],
+      "source": [
+        "def result(tensor):\n",
+        " result = tensor[:, :2, :2] # оставим только первые два элемента (0, 1) по строкам и столбца\n",
+        " return result"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 37,
+      "metadata": {
+        "id": "n20adhoGWdww",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "collapsed": true,
+        "outputId": "66842b36-b6c0-4dc2-ea3f-decf4ef0076a"
+      },
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[[ 1,  2],\n",
+              "        [ 4,  5]],\n",
+              "\n",
+              "       [[10, 11],\n",
+              "        [13, 14]],\n",
+              "\n",
+              "       [[19, 20],\n",
+              "        [22, 23]]])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 37
+        }
+      ],
+      "source": [
+        "tensor = np.array([[[1, 2, 3],\n",
+        "                    [4, 5, 6],\n",
+        "                    [7, 8, 9]],\n",
+        "\n",
+        "                   [[10, 11, 12],\n",
+        "                    [13, 14, 15],\n",
+        "                    [16, 17, 18]],\n",
+        "\n",
+        "                   [[19, 20, 21],\n",
+        "                    [22, 23, 24],\n",
+        "                    [25, 26, 27]]])\n",
+        "\n",
+        "result(tensor)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "TsSDH4daWdww"
+      },
+      "source": [
+        "### Задание 13\n",
+        "\n",
+        "На вход подается двумерный массив с ценами акций различных компаний в разные дни: каждая строка — отдельный день; каждый столбец — отдельная компания.\n",
+        "\n",
+        "Напишите функцию, которая:\n",
+        "* рассчитывает среднюю цену акций каждой компании за весь период;\n",
+        "* определяет компанию с наибольшей разницей между максимальной и минимальной ценой акций за весь период;\n",
+        "* находит такой день $t$, в который суммарное абсолютное изменение цен относительно предыдущего дня $t−1$ максимально."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылки на используемые методы:`\n",
+        "\n",
+        "**mean:** https://numpy.org/doc/2.1/reference/generated/numpy.mean.html#numpy.mean\n",
+        "\n",
+        "**absolute:** https://numpy.org/doc/2.1/reference/generated/numpy.absolute.html#numpy.absolute"
+      ],
+      "metadata": {
+        "id": "_z6bDpZsAEit"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 38,
+      "metadata": {
+        "id": "e9-G39hcWdww"
+      },
+      "outputs": [],
+      "source": [
+        "def stats(stock_prices):\n",
+        "  srednee = np.mean(stock_prices, axis=0) # среднее по столбцам (столбец = компания)\n",
+        "  razniza = np.max(stock_prices, axis=0) - np.min(stock_prices, axis=0) # разница между мин и макс ценой акции одной компании\n",
+        "  indices_razniza = np.argmax(razniza) # определяем компанию (индекс) с максимальной разницей\n",
+        "  abs_izm = np.absolute(stock_prices[1:] - stock_prices[:-1]) # модуль изменения цены от предыдущего дня для всех компаний\n",
+        "  sum_abs_izm = np.sum(abs_izm, axis=1) # сумма абсолюных изменений\n",
+        "  abs_raznost_s_0 = np.hstack([[0], sum_abs_izm]) # добавляем 0 к массиву, тк в певый рень разница нулевая\n",
+        "  indices_result = np.argmax(abs_raznost_s_0) # выводим индекс дня, в который суммарное абс изменение цен отн предыдущего дня максимально\n",
+        "  return srednee, indices_razniza, indices_result"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 39,
+      "metadata": {
+        "id": "P7xTt1hBWdwx",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "600fd32d-003a-499d-de18-b198188f9d9b"
+      },
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(array([120.71428571, 121.42857143, 120.85714286]), np.int64(2), np.int64(3))"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 39
+        }
+      ],
+      "source": [
+        "stock_prices = np.array([\n",
+        "    [110, 112, 108],\n",
+        "    [115, 118, 120],\n",
+        "    [108, 110, 105],\n",
+        "    [122, 121, 124],\n",
+        "    [128, 130, 125],\n",
+        "    [133, 132, 134],\n",
+        "    [129, 127, 130]\n",
+        "])\n",
+        "\n",
+        "stats(stock_prices)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ZscA0HPzWdwx"
+      },
+      "source": [
+        "### Задание 14\n",
+        "\n",
+        "Напишите функцию, вычисляющую какую-нибудь первообразную данного полинома (в качестве константы возьмите ваше любимое число).\n",
+        "\n",
+        "Например, если на вход поступает массив коэффициентов `array([4, 6, 0, 1])`, что соответствует полиному $4x^3 + 6x^2 + 1$, на выходе получается массив коэффициентов `array([1, 2, 0, 1, -2])`, соответствующий полиному $x^4 + 2x^3 + x - 2$.\n",
+        "\n",
+        "В этом задании запрещено использовать функцию `polyint`, которая делает... буквально это!"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 40,
+      "metadata": {
+        "id": "XMsIb7TnWdwx"
+      },
+      "outputs": [],
+      "source": [
+        "def antiderivative(coefs):\n",
+        "    spisok = np.arange(len(coefs),0,-1) # создаем массив от длины массива коэффициентов (высшая степень многочлена) до 0 (тут: 4321)\n",
+        "    return np.hstack([coefs / spisok, [23]]) # делим соответствующие коэффициенты на степени многочлена и добавляем в конец массива константу (тут 23)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 41,
+      "metadata": {
+        "id": "eoX3r-6aWdwx",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "bd15299c-7798-4a16-97f2-4469d9b9e80d"
+      },
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([ 1.,  2.,  0.,  1., 23.])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 41
+        }
+      ],
+      "source": [
+        "coefs = np.array([4, 6, 0, 1])\n",
+        "antiderivative(coefs)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "x9BALNmiWdwx"
+      },
+      "source": [
+        "### Задание 15\n",
+        "\n",
+        "Напишите функцию, которая принимает на вход вектор $v$, порог $t$ и $n$ случайных векторов $u_0, u_1, ...  u_n$ и возвращает индексы тех векторов $u_i$, [евклидово](https://ru.m.wikipedia.org/wiki/%D0%95%D0%B2%D0%BA%D0%BB%D0%B8%D0%B4%D0%BE%D0%B2%D0%B0_%D0%BC%D0%B5%D1%82%D1%80%D0%B8%D0%BA%D0%B0?from_mobile_app=true&mobile_internal_deeplink=true) расстояние которых до вектора $v$ не превышает порог $t$:\n",
+        "\n",
+        "  $$ r_{euclidean}(v, u_i) \\leq t$$\n",
+        "\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылка на используемые методы:`\n",
+        "\n",
+        "**square:** https://numpy.org/doc/2.1/reference/generated/numpy.square.html\n",
+        "\n",
+        "**where:** https://numpy.org/devdocs/reference/generated/numpy.where.html"
+      ],
+      "metadata": {
+        "id": "N7a2xJiz_jAo"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 42,
+      "metadata": {
+        "id": "2KIkDFaZWdwx"
+      },
+      "outputs": [],
+      "source": [
+        "def r_euclidean_func_solution(v, n, t, u):\n",
+        "  raznost_square = np.square(v - u) # разность v с массивом u в квадрате\n",
+        "  evklidovo = np.sqrt(np.sum(raznost_square, axis=1)) # корень из суммы разностей в квадрате по каждой строке (axis=1)\n",
+        "  return np.where(evklidovo <= t)[0]  # вывести индексы строк u, для которых выполняется, что евклидово расстояние до них <= t"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 43,
+      "metadata": {
+        "id": "1_Z6atXfWdwx",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "a53d8ee0-e2ae-4bc6-fe48-f02af9e26d14"
+      },
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([2, 3])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 43
+        }
+      ],
+      "source": [
+        "v = np.array([1, 1, 1, 1])\n",
+        "n = 4\n",
+        "t = 1.0\n",
+        "u = np. array([[0, 0, 0, 0],\n",
+        "               [1, 0, 1, 0],\n",
+        "               [1, 1, 1, 1],\n",
+        "               [1, 1, 1, 0]])\n",
+        "\n",
+        "r_euclidean_func_solution(v, n, t, u)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "PN7hO3_jWdwx"
+      },
+      "source": [
+        "### Задание 16\n",
+        "\n",
+        "Напишите функцию, вычисляющую [косинусную близость](https://en.wikipedia.org/wiki/Cosine_similarity) двух векторов.\n",
+        "\n",
+        "Например, если на вход поступают вектора `array([-2, 1, 0, -5, 4, 3, -3])` и `array([0, 2, -2, 10, 6, 0, 0])`, ответом будет $-0.25$."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`Ссылка на используемый метод:`\n",
+        "\n",
+        "**sqrt:** https://numpy.org/doc/2.1/reference/generated/numpy.sqrt.html#numpy.sqrt"
+      ],
+      "metadata": {
+        "id": "Uk8d1Zov-qWV"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 44,
+      "metadata": {
+        "id": "QokaGSW-Wdwx"
+      },
+      "outputs": [],
+      "source": [
+        "def cosine_similarity(vec1, vec2):\n",
+        "    chislitel = np.sum(vec1*vec2) # вычисляем числитель как скалярное произведение\n",
+        "    znamenatel = np.sqrt(np.sum(vec1**2)) * np.sqrt(np.sum(vec2**2)) # вычиляем знаменатель как произведение норм A и B\n",
+        "    return chislitel/znamenatel # выводим по формуле"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 45,
+      "metadata": {
+        "id": "6GVT8ItkWdwx",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "b524e380-b71e-4868-ca27-649c0b4a16e1"
+      },
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "np.float64(-0.25)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 45
+        }
+      ],
+      "source": [
+        "vec1 = np.array([-2, 1, 0, -5, 4, 3, -3])\n",
+        "vec2 = np.array([0, 2, -2, 10, 6, 0, 0])\n",
+        "cosine_similarity(vec1, vec2)"
+      ]
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "default",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.11.9"
+    },
+    "colab": {
+      "provenance": []
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
